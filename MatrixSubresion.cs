@@ -2,73 +2,95 @@
 using System.Collections.Generic;
 namespace MatrixSubregion
 {
+    class Coords 
+    {
+        public int row {get;set;}
+        public int col {get;set;}
+
+        public Coords(int row, int col)
+        {
+            this.row = row;
+            this.col = col;
+        }
+    }
+
     class Cell{
-        public int x
+        public int row
         { get; set; }
-        public int y
+        public int col
         { get; set; }
         public int value
         { get; set; }
         public int region
         { get; set; }
-        // public bool check
-        // { get; set; }
 
-        public Cell(int x, int y, int value, int region, bool check)
+        public Cell(int row, int col, int value, int region)
         {
-            this.x = x;
-            this.y = y;
+            this.row = row;
+            this.col = col;
             this.value = value;
             this.region = region;
-            // this.check = check;
         }
     }
     class Subregion
     {
+        int[] DIR_ROW = {1,-1,0,0,1,1,-1,-1};
+        int[] DIR_COL = {0,0,1,-1,1,-1,1,-1};
 
         List<List<Cell>> myList = new List<List<Cell>>();
-        int[] avgArray;
+        // int[] avgArray;
         int countCell = 0;
-        public int regionCount(int[][] grid, int treshold)
+        public int regionCount(int[,] grid, int treshold)
         {
             countCell = 0;
+            bool[,] visited = new bool[grid.GetLength(0),grid.GetLength(1)];
             myList.Clear();
-            if(grid == null || grid.Length == 0)
+            if(grid == null || grid.GetLength(0) == 0)
             {
                 return 0;
             }
 
-            for(int i = 0; i < grid.Length; i++){
-                for(int j = 0; j < grid[0].Length; j++){
-                    if(grid[i][j] >= treshold){
+            for(int i = 0; i < grid.GetLength(0); i++){
+                for(int j = 0; j < grid.GetLength(1); j++){
+                    if(grid[i,j] >= treshold){
+                        int count = 0;
                         List<Cell> listCell = new List<Cell>();
-                        dfs(grid, i, j ,treshold, listCell);
-                        myList.Add(listCell);
-                        countCell++;
+                        count = dfs(grid, i, j ,treshold, listCell,visited);
+                        if(count > 0)
+                        {
+                            myList.Add(listCell);
+                            countCell++;
+                        }
                     }
                 }
             }
             return countCell;
         }
 
-        void dfs(int[][] grid, int i, int j, int treshold, List<Cell> listCell)
+        int dfs(int[,] grid, int i, int j, int treshold, List<Cell> listCell, bool[,] visited)
         {
-            if(i < 0 || i >= grid.Length || j < 0 || j >= grid[i].Length || grid[i][j] < treshold){
-                return;
+            if(i < 0 || i >= grid.GetLength(0) || j < 0 || j >= grid.GetLength(1) || grid[i,j] < treshold || visited[i,j] == true){
+                return 0;
             }
 
-            listCell.Add(new Cell(i,j, grid[i][j], countCell,true));
+            listCell.Add(new Cell(i,j, grid[i,j], countCell));
 
-            grid[i][j] = 0;
-            dfs(grid, i + 1, j ,treshold ,listCell);
-            dfs(grid, i - 1, j ,treshold ,listCell);
-            dfs(grid, i, j + 1 ,treshold ,listCell);
-            dfs(grid, i, j - 1 ,treshold ,listCell);
+            // grid[i,j] = 0;
+            visited[i,j] = true;
+            for(int index = 0; index < DIR_ROW.Length; index++)
+            {
+                dfs(grid, i + DIR_ROW[index], j + DIR_COL[index] ,treshold ,listCell,visited);
+            }
+            // dfs(grid, i + 1, j ,treshold ,listCell);
+            // dfs(grid, i - 1, j ,treshold ,listCell);
+            // dfs(grid, i, j + 1 ,treshold ,listCell);
+            // dfs(grid, i, j - 1 ,treshold ,listCell);
 
-            dfs(grid, i + 1, j + 1 ,treshold ,listCell);
-            dfs(grid, i + 1, j - 1 ,treshold ,listCell);
-            dfs(grid, i - 1, j + 1 ,treshold ,listCell);
-            dfs(grid, i - 1, j - 1 ,treshold ,listCell);
+            // dfs(grid, i + 1, j + 1 ,treshold ,listCell);
+            // dfs(grid, i + 1, j - 1 ,treshold ,listCell);
+            // dfs(grid, i - 1, j + 1 ,treshold ,listCell);
+            // dfs(grid, i - 1, j - 1 ,treshold ,listCell);
+            return 1;
         }
         public int[] calcAverage()
         {
@@ -93,6 +115,38 @@ namespace MatrixSubregion
             return avgArray;
         }
 
+        public List<List<Coords>> calcCoords()
+        {         
+            List<List<Coords>> coordsList = new List<List<Coords>>();
+
+            foreach (List<Cell> subList in myList)
+            {
+                List<Coords> coords = new List<Coords>();
+                foreach (Cell item in subList)
+                {
+                    coords.Add(new Coords(item.row,item.col)); 
+                } 
+                coordsList.Add(coords);
+            }
+            return coordsList;
+        }
+
+        public void printCoords()
+        {
+            List<List<Coords>> coordsList = calcCoords();
+            int index = 0;
+            foreach (List<Coords> subList in coordsList)
+            {
+                System.Console.WriteLine("==region coords: " + index++);
+
+                foreach (Coords item in subList)
+                {
+                    System.Console.WriteLine( item.row + "," +item.col ); 
+                } 
+                 
+            }
+        }
+
         public void printSummary()
         {
             int sum = 0;
@@ -105,7 +159,7 @@ namespace MatrixSubregion
                  i = 0;
                 foreach (Cell item in subList)
                 {
-                    Console.WriteLine("row:"+item.x +", column:" +item.y + ", value:" + item.value + ", region=" + item.region);
+                    Console.WriteLine("row:"+item.row +", column:" +item.col + ", value:" + item.value + ", region=" + item.region);
                     sum += item.value;
                     i++;
                 }
@@ -134,10 +188,28 @@ namespace MatrixSubregion
             M1[4] = new int[] { 0, 5, 95, 115, 165, 250 };
             M1[5] = new int[] { 5, 0, 25, 5, 145, 250 };
 
+            int [,] M2 = 
+            { { 0, 80, 45, 95, 170, 145 },
+             { 115, 210, 60, 5, 230,220 },
+             { 5, 0, 145, 250, 245, 140 },
+             { 15, 5, 175, 250, 185, 160 },
+             { 0, 5, 95, 115, 165, 250 },
+             { 5, 0, 25, 5, 145, 250 }};
+
             Subregion ms = new Subregion();
             // System.Console.WriteLine(regionCount(M1,200));
-            ms.regionCount(M1,200);
+            ms.regionCount(M2,200);
             ms.printSummary();
+            ms.printCoords();
+
+            // List<List<Coords>> coordsList = ms.calcCoords();
+            // foreach (List<Coords> subList in coordsList)
+            // {
+            //     foreach (Coords item in subList)
+            //     {
+            //         System.Console.WriteLine( M2[item.row,item.col]);  
+            //     }      
+            // }
             
         }
     
