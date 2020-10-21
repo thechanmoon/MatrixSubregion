@@ -9,7 +9,7 @@ namespace MatrixSubregion
         [InlineData(200, 3, new int[] { 210, 239, 250 })]
         [InlineData(150, 2, new int[] { 212, 210 })]
         
-        public void averageTheory(int trashold, int regionCount ,int[] avgArray, int[][] array)
+        public void averageTheory(int trashold, int regionCount ,int[] avgArray)
         {
             // int [][] matrix = new int[6][];
             // matrix[0] = new int[] { 0, 80, 45, 95, 170, 145 };

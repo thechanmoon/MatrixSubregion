@@ -38,7 +38,6 @@ namespace MatrixSubregion
         int[] DIR_COL = {0,0,1,-1,1,-1,1,-1};
 
         List<List<Cell>> myList = new List<List<Cell>>();
-        // int[] avgArray;
         int countCell = 0;
         public int regionCount(int[,] grid, int treshold)
         {
@@ -180,13 +179,13 @@ namespace MatrixSubregion
             
             // Console.WriteLine("Hello World!");
             
-            int [][] M1 = new int[6][];
-            M1[0] = new int[] { 0, 80, 45, 95, 170, 145 };
-            M1[1] = new int[] { 115, 210, 60, 5, 230,220 };
-            M1[2] = new int[] { 5, 0, 145, 250, 245, 140 };
-            M1[3] = new int[] { 15, 5, 175, 250, 185, 160 };
-            M1[4] = new int[] { 0, 5, 95, 115, 165, 250 };
-            M1[5] = new int[] { 5, 0, 25, 5, 145, 250 };
+            // int [][] M1 = new int[6][];
+            // M1[0] = new int[] { 0, 80, 45, 95, 170, 145 };
+            // M1[1] = new int[] { 115, 210, 60, 5, 230,220 };
+            // M1[2] = new int[] { 5, 0, 145, 250, 245, 140 };
+            // M1[3] = new int[] { 15, 5, 175, 250, 185, 160 };
+            // M1[4] = new int[] { 0, 5, 95, 115, 165, 250 };
+            // M1[5] = new int[] { 5, 0, 25, 5, 145, 250 };
 
             int [,] M2 = 
             { { 0, 80, 45, 95, 170, 145 },
@@ -197,19 +196,8 @@ namespace MatrixSubregion
              { 5, 0, 25, 5, 145, 250 }};
 
             Subregion ms = new Subregion();
-            // System.Console.WriteLine(regionCount(M1,200));
             ms.regionCount(M2,200);
             ms.printSummary();
-            ms.printCoords();
-
-            // List<List<Coords>> coordsList = ms.calcCoords();
-            // foreach (List<Coords> subList in coordsList)
-            // {
-            //     foreach (Coords item in subList)
-            //     {
-            //         System.Console.WriteLine( M2[item.row,item.col]);  
-            //     }      
-            // }
             
         }
     
