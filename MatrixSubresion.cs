@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-// namespace MatrixSubregion
-// {
+namespace MatrixSubregion
+{
     class Cell{
         public int x
         { get; set; }
@@ -23,14 +23,16 @@ using System.Collections.Generic;
             // this.check = check;
         }
     }
-    class MatrixSubregion
+    class Subregion
     {
 
-        static List<List<Cell>> myList = new List<List<Cell>>();
+        List<List<Cell>> myList = new List<List<Cell>>();
         int[] avgArray;
-        static int countCell = 0;
-        public static int regionCount(int[][] grid, int treshold)
+        int countCell = 0;
+        public int regionCount(int[][] grid, int treshold)
         {
+            countCell = 0;
+            myList.Clear();
             if(grid == null || grid.Length == 0)
             {
                 return 0;
@@ -49,7 +51,7 @@ using System.Collections.Generic;
             return countCell;
         }
 
-        static void dfs(int[][] grid, int i, int j, int treshold, List<Cell> listCell)
+        void dfs(int[][] grid, int i, int j, int treshold, List<Cell> listCell)
         {
             if(i < 0 || i >= grid.Length || j < 0 || j >= grid[i].Length || grid[i][j] < treshold){
                 return;
@@ -68,7 +70,7 @@ using System.Collections.Generic;
             dfs(grid, i - 1, j + 1 ,treshold ,listCell);
             dfs(grid, i - 1, j - 1 ,treshold ,listCell);
         }
-        public static int[] calcAverage()
+        public int[] calcAverage()
         {
             int[] avgArray = new int[myList.Count];
             int sum = 0;
@@ -90,7 +92,8 @@ using System.Collections.Generic;
             }
             return avgArray;
         }
-        public static void printSummary()
+
+        public void printSummary()
         {
             int sum = 0;
             int i = 0;
@@ -113,19 +116,16 @@ using System.Collections.Generic;
             }
         }
 
-        public static int Add(int x, int y)
-        {
-            return x + y;
-        }
 
-        public static bool IsOdd(int value)
-        {
-            return value % 2 == 1;
-        }
+    }
 
+    class MatrixSubregion
+    {
         static void Main(string[] args)
         {
+            
             // Console.WriteLine("Hello World!");
+            
             int [][] M1 = new int[6][];
             M1[0] = new int[] { 0, 80, 45, 95, 170, 145 };
             M1[1] = new int[] { 115, 210, 60, 5, 230,220 };
@@ -133,21 +133,13 @@ using System.Collections.Generic;
             M1[3] = new int[] { 15, 5, 175, 250, 185, 160 };
             M1[4] = new int[] { 0, 5, 95, 115, 165, 250 };
             M1[5] = new int[] { 5, 0, 25, 5, 145, 250 };
-            // { { 0, 80, 45, 95, 170, 145 }, 
-            //     { 115, 210, 60, 5, 230,220 }, 
-            //     { 5, 0, 145, 250, 245, 140 }, 
-            //     { 15, 5, 175, 250, 185, 160 }, 
-            //     { 0, 5, 95, 115, 165, 250 },
-            //     { 5, 0, 25, 5, 145, 250 }
-            //     };
+
+            Subregion ms = new Subregion();
             // System.Console.WriteLine(regionCount(M1,200));
-            regionCount(M1,200);
-            printSummary();
-            
-            foreach( int n in calcAverage()){
-                System.Console.WriteLine("avg: " + n);
-            }
+            ms.regionCount(M1,200);
+            ms.printSummary();
             
         }
+    
     }
-// }
+ }
